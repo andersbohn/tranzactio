@@ -81,6 +81,7 @@ val ZioCatsVersion = "2.1.4.0"
 val DoobieVersion = "0.9.0"
 val AnormVersion = "2.6.7"
 val H2Version = "1.4.200"
+val PSQLDriverVersion = "42.2.6"
 
 libraryDependencies ++= Seq(
   /* ZIO */
@@ -96,8 +97,16 @@ libraryDependencies ++= Seq(
   "dev.zio" %% "zio-test-sbt" % ZioVersion % "test",
   "dev.zio" %% "zio-test-magnolia" % ZioVersion % "test",
 
+  /* PG for localhost runs */
+  "org.postgresql" % "postgresql" % PSQLDriverVersion,
+  "org.tpolecat" %% "doobie-core" % DoobieVersion,
+  "org.tpolecat" %% "doobie-hikari" % DoobieVersion,
+  "org.tpolecat" %% "doobie-postgres" % DoobieVersion,
+
+
   /* H2 for tests */
-  "com.h2database" % "h2" % H2Version % "test"
+  "com.h2database" % "h2" % H2Version % "test",
+
 )
 
 

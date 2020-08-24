@@ -25,5 +25,16 @@ object Conf {
   )
 
 
+  def liveLocalPg(dbName: String): Layer[Nothing, Has[Root]] = ZLayer.succeed {
+    val url = s"jdbc:postgresql://localhost/$dbName"
+    val x = Conf.Root(
+      db = DbConf(url, "test", "test"),
+      dbRecovery = ErrorStrategies.RetryForever.withTimeout(2.seconds).withRetryTimeout(5.seconds)
+    )
+    println(s"teh db '$url'")
+    x
+  }
+
+
 }
 

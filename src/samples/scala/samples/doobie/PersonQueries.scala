@@ -11,6 +11,8 @@ object PersonQueries {
   trait Service {
     val setup: TranzactIO[Unit]
 
+    val uqix: TranzactIO[Unit]
+
     val list: TranzactIO[List[Person]]
 
     def insert(p: Person): TranzactIO[Unit]
@@ -19,6 +21,10 @@ object PersonQueries {
   }
 
   val live: ULayer[PersonQueries] = ZLayer.succeed(new Service {
+
+    val uqix: TranzactIO[Unit] = tzio {
+      sql"""ALTER TABLE person ADD CONSTRAINT UK_NAME UNIQUE (given_name)""".update.run.map(_ => ())
+    }
 
     val setup: TranzactIO[Unit] = tzio {
       sql"""
@@ -45,6 +51,8 @@ object PersonQueries {
   })
 
   def setup: ZIO[PersonQueries with Connection, DbException, Unit] = ZIO.accessM(_.get.setup)
+
+  def uqix: ZIO[PersonQueries with Connection, DbException, Unit] = ZIO.accessM(_.get.uqix)
 
   val list: ZIO[PersonQueries with Connection, DbException, List[Person]] = ZIO.accessM(_.get.list)
 
